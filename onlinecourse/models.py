@@ -97,11 +97,11 @@ class Enrollment(models.Model):
 # Question model
 class Question(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    question_text = models.CharField(max_length=500)
-    grade = models.IntegerField(default=20)
+    content = models.TextField()
+    grade = models.IntegerField(default=1)
 
     def __str__(self):
-        return "Question: " + self.question_text
+        return self.content
 
     def is_get_score(self, selected_ids):
         all_answers = self.choice_set.filter(is_correct=True).count()
@@ -110,7 +110,6 @@ class Question(models.Model):
         if all_answers == selected_correct and selected_incorrect == 0:
             return True
         return False
-
     # method to calculate if the learner gets the score of the question
     def is_get_score(self, selected_ids):
         all_answers = self.choice_set.filter(is_correct=True).count()
@@ -123,12 +122,11 @@ class Question(models.Model):
 # Choice model
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
+    content = models.CharField(max_length=100)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Choice: " + self.choice_text
-
+        return self.content
 
 
 # One enrollment could have multiple submission
@@ -140,4 +138,4 @@ class Submission(models.Model):
     choices = models.ManyToManyField(Choice)
 
     def __str__(self):
-        return "Enrollment: " + str(self.enrollment)
+        return f"Submission: {self.enrollment.user.username} - {self.enrollment.course.name}"
