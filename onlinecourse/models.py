@@ -122,9 +122,13 @@ class Choice(models.Model):
         return "Choice: " + self.content
 
 
+
 # One enrollment could have multiple submission
 # One submission could have multiple choices
 # One choice could belong to multiple submissions
 class Submission(models.Model):
-   enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-   choices = models.ManyToManyField(Choice)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    choices = models.ManyToManyField(Choice)
+
+    def __str__(self):
+        return "Submission: " + str(self.enrollment)
